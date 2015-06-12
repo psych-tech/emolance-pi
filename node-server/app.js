@@ -4,6 +4,7 @@ var execSync = require('child_process').execSync;
 var exec = require('child_process').exec;
 var cors = require('cors')
 var needle = require('needle');
+var fs = require('fs');
 
 
 var app = express();
@@ -46,6 +47,21 @@ function registerDevice(sn) {
         });
 }
 
+function writeYmlConfigWithSn(sn) {
+  var stream = fs.createWriteStream("/home/pi/.ngrok2/ngrok.yml");
+  stream.once('open', function(fd) {
+      stream.write("authtoken: 7wBPwmzwU2esuUHvtJA2R_4kQwpiswRcJyD3axcZSmB\n");
+      stream.write("tunnels:\n");
+      stream.write("  emolance:\n");
+      stream.write("    subdomain: \"" + sn + ".emolance\"\n");
+      stream.write("    addr: 3000\n");
+      stream.write("    proto: http\n");
+      stream.write("  ssh:\n");
+      stream.write("    proto: tcp\n");
+      stream.write("    addr: 22\n");
+      stream.end();
+  });
+}
 
 var server = app.listen(3000, function () {
 
@@ -53,9 +69,11 @@ var server = app.listen(3000, function () {
   var port = server.address().port;
   
   var sn = getSerialNumber();
+  writeYmlConfigWithSn(sn);
+
   registerDevice(sn);
 
-  exec('/home/pi/ngrok http 3000 -subdomain ' + sn + '.emolance', function (error, stdout, stderr) {
+  exec('/home/pi/ngrok start --all', function (error, stdout, stderr) {
     console.log('stdout: ' + stdout);
     console.log('stderr: ' + stderr);
     if (error !== null) {
