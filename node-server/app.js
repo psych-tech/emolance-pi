@@ -20,6 +20,16 @@ app.get('/process/:userId', function (req, res) {
   res.send(imageReport);
 });
 
+app.get('/process/self/trigger', function (req, res) {
+  var time = new Date().getTime();
+  var fileName = sn + "-" + time;
+  execSync("/usr/bin/camera " + fileName);
+  var imageReport = {};
+  imageReport.timestamp = time;
+  imageReport.url = 'http://s3.amazonaws.com/emolance-photos/' + fileName + '.jpg';
+  res.send(imageReport);
+});
+
 app.get('/ping', function(req, res) {
   res.send('OK');
 });
@@ -63,12 +73,14 @@ function writeYmlConfigWithSn(sn) {
   });
 }
 
+var sn = "N/A";
+
 var server = app.listen(3000, function () {
 
   var host = server.address().address;
   var port = server.address().port;
   
-  var sn = getSerialNumber();
+  sn = getSerialNumber();
   writeYmlConfigWithSn(sn);
 
   registerDevice(sn);
