@@ -31,7 +31,7 @@ app.get('/process/self/trigger', function (req, res) {
 });
 
 app.get('/ping', function(req, res) {
-  res.send('OK');
+  res.send('OK. Updated.');
 });
 
 
