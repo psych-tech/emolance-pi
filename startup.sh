@@ -1,6 +1,6 @@
 #! /bin/sh
 
-cd /home/pi/emolance/
+cd /home/pi/emolance-pi/
 git pull --rebase
 cd /home/pi/
 
