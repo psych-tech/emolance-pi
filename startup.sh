@@ -2,6 +2,7 @@
 
 cd /home/pi/emolance/
 git pull --rebase
+cd /home/pi/
 
 sudo python /home/pi/emolance-pi/control-scripts/inputtest.py &
 
