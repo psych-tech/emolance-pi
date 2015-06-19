@@ -1,8 +1,5 @@
 #! /bin/sh
 
-cd /home/pi/emolance-pi/
-git pull --rebase
-cd /home/pi/
 
 sudo python /home/pi/emolance-pi/control-scripts/inputtest.py &
 
