@@ -18,6 +18,24 @@ app.get('/process/:userId', function (req, res) {
   imageReport.timestamp = time;
   imageReport.url = 'http://s3.amazonaws.com/emolance-photos/' + fileName + '.jpg';
   res.send(imageReport);
+  flashLed();
+});
+
+app.get('/self/process/trigger', function (req, res) {
+    var options = {
+        headers: { 'X-Custom-Header': 'Emolance' }
+    };
+
+    needle
+        .post('http://admin:admin@hlab.yusun.io/api/reports/device/trigger/process/' + sn, '', options, function(error, response) {
+            if (!error && response.statusCode == 200) {
+                console.log("Device registered successfully!");
+            } else {
+                console.log("Failed: " + error);
+            }
+        });
+
+   res.send('OK');
 });
 
 app.get('/process/self/trigger', function (req, res) {
@@ -28,12 +46,16 @@ app.get('/process/self/trigger', function (req, res) {
   imageReport.timestamp = time;
   imageReport.url = 'http://s3.amazonaws.com/emolance-photos/' + fileName + '.jpg';
   res.send(imageReport);
+  flashLed();
 });
 
 app.get('/ping', function(req, res) {
   res.send('OK. Updated.');
 });
 
+function flashLed() {
+  execSync("sudo python /home/pi/emolance-pi/control-scripts/simple.py");
+}
 
 function getSerialNumber() {
     var res = execSync('get-serial.sh');
@@ -44,8 +66,8 @@ function getSerialNumber() {
 
 function registerDevice(sn) {
     var options = {
-  headers: { 'X-Custom-Header': 'Emolance' }
-}
+        headers: { 'X-Custom-Header': 'Emolance' }
+    }
 
     needle
         .post('http://admin:admin@hlab.yusun.io/api/devices/register/' + sn, '', options, function(error, response) {
@@ -95,4 +117,5 @@ var server = app.listen(3000, function () {
 
   console.log('Emolance app listening at http://%s:%s', host, port);
   console.log('Public endpoint is http://' + sn + '.emolance.ngrok.io');
+  //flashLed();
 });
