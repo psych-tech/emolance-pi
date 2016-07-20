@@ -10,7 +10,7 @@ fi
 
 raspistill --width 1280 --height 960 -vf -hf -o /home/pi/camera/$DATE.jpg
 
-s3cmd put -P /home/pi/camera/$DATE.jpg s3://emolance-photos/
+s3cmd put -P /home/pi/camera/$DATE.jpg s3://mypiphotos/
 
 rm /home/pi/camera/$DATE.jpg
 
