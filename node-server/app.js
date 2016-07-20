@@ -16,7 +16,7 @@ app.get('/process/:userId', function (req, res) {
   execSync("/usr/bin/camera " + fileName);
   var imageReport = {};
   imageReport.timestamp = time;
-  imageReport.url = 'http://s3.amazonaws.com/emolance-photos/' + fileName + '.jpg';
+  imageReport.url = 'http://s3-us-west-1.amazonaws.com/mypiphotos/' + fileName + '.jpg';
   res.send(imageReport);
   flashLed();
 });
